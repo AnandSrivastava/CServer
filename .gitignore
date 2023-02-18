@@ -2,7 +2,4 @@ obj
 obj/*
 app/*
 !app/include/handlers.h
-!app/include/root_app.h
-!app/index.c
-!app/root_app.c
 cserver

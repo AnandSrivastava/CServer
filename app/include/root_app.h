@@ -1,5 +1,5 @@
 /***********************************************************************************************************
-* root_app.c
+* root_app.h
 *
 * CServer entry-point. All initialization and registration is done here. run starts the CServer and starts 
 * serving all incomgin request.
@@ -7,19 +7,9 @@
 * Author - Anand Kumar 
 ************************************************************************************************************/
 
-#include "request_router.h"
-#include "http_server.h"
-#include "handlers.h"
-#include "logger.h"
-#include "root_app.h"
+#ifndef _ROOT_APP_H_
+#define _ROOT_APP_H_
 
-int run_root_app() {
-        LOG_DEBUG("starting cserver....");
+int run_root_app();
 
-	_router_ router = init_router();
-	REGISTER_HANDLERS(router)
-        run(router);
-
-        return 0;
-}
-
+#endif
