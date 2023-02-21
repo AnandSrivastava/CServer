@@ -46,6 +46,7 @@ $(OBJDIR)%.o : $(SERVERDIR)%.c
 pre-built :
 	mkdir -p $(OBJDIR)
 	python3 tools/register_handlers.py
+	python3 tools/config_builder.py
 
 deps : $(UTILOBJS)  $(IOOBJS) $(APPOBJS) $(SERVEROBJS)
 

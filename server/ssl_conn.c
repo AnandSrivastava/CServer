@@ -11,6 +11,7 @@
 
 #include "ssl_conn.h"
 #include "logger.h"
+#include "app_config.h"
 
 /*
  * Initialize open_ssl context.
@@ -86,7 +87,7 @@ void ShowCerts(SSL* ssl)
 SSL_CTX *Init_SSL() {
 	SSL_library_init();
 	SSL_CTX *ctx = Initialize_ssl_context();
-	LoadCertificates(ctx, "cert.pem", "key.pem");
+	LoadCertificates(ctx, config.ssl.cert_file, config.ssl.key_file);
 
 	return ctx;
 }

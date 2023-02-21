@@ -28,6 +28,7 @@
 #include "request_parser.h"
 #include "http_response.h"
 #include "ssl_conn.h"
+#include "app_config.h"
 
 _router_ *router = NULL;
 SSL_CTX *ctx = NULL;
@@ -131,7 +132,11 @@ int run(_router_ r) {
 	router = r;
 
 	/* Initialize SSL library */
-	ctx = Init_SSL();
+	if(config.ssl.enabled) {
+		ctx = Init_SSL();
+		LOG_DEBUG("SSL ENABLED")
+	} else 
+		LOG_DEBUG("SSL DISABLED ... ")
 	/****************************************************/
 
 	//create socket
@@ -140,7 +145,7 @@ int run(_router_ r) {
 	//define address
 	struct sockaddr_in server_address;
 	server_address.sin_family = AF_INET;
-	server_address.sin_port = htons(8001);
+	server_address.sin_port = htons(config.server.port);
 	server_address.sin_addr.s_addr = INADDR_ANY;
 
 	bind(server_socket, (struct sockaddr *) &server_address, sizeof(server_address));
@@ -149,7 +154,10 @@ int run(_router_ r) {
 	while(1) {
 		int client_socket = accept(server_socket, NULL, NULL);
 		LOG_DEBUG("CONNECTED TO CLIENT.......")
-		handle_ssl_request(ctx, client_socket, router);
+		if (config.ssl.enabled)
+			handle_ssl_request(ctx, client_socket, router);
+		else
+			handle_request(client_socket, router);
 
 		LOG_DEBUG("REQUEST PROCESSED");
 	}
