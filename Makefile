@@ -9,7 +9,7 @@
   ********************************************************************************* 
 
 CC=gcc
-CFLAGS=-Wall -pedantic
+CFLAGS=-Wall -pedantic 
 
 IODIR=./stream/
 UTILSDIR=./utils/
@@ -17,7 +17,12 @@ SERVERDIR=./server/
 APPDIR=./app/
 OBJDIR=./obj/
 
+OPENSSL_LIB=/opt/homebrew/opt/openssl@3/lib
+OPENSSL_INCLUDE=/opt/homebrew/opt/openssl@3/include
+
 ALLINCLUDES=-I$(UTILSDIR)include -I$(IODIR)include -I$(SERVERDIR)include -I$(APPDIR)include
+LDSSLFLAGS= -L$(OPENSSL_LIB)
+INCLUDESSLFLAGS=-I$(OPENSSL_INCLUDE)
 
 ENABLE_LOG=-DLOG_ENABLED -DDEBUG
 
@@ -29,13 +34,13 @@ APPOBJS=$(patsubst $(APPDIR)%.c,$(OBJDIR)%.o,$(wildcard $(APPDIR)*.c))
 SERVEROBJS=$(patsubst $(SERVERDIR)%.c,$(OBJDIR)%.o,$(wildcard $(SERVERDIR)*.c))
 
 $(OBJDIR)%.o : $(IODIR)%.c
-	$(CC) -c -I$(IODIR)include -I$(UTILSDIR)include $(CFLAGS) $(MACRO) $< -o $@
+	$(CC) -c $(INCLUDESSLFLAGS) -I$(IODIR)include -I$(UTILSDIR)include $(CFLAGS) $(MACRO) $< -o $@
 $(OBJDIR)%.o : $(UTILSDIR)%.c
 	$(CC) -c -I$(UTILSDIR)include $(CFLAGS) $(MACRO) $< -o $@
 $(OBJDIR)%.o : $(APPDIR)%.c
 	$(CC) -c $(ALLINCLUDES) $(CFLAGS) $(MACRO)  $< -o $@ 
 $(OBJDIR)%.o : $(SERVERDIR)%.c
-	$(CC) -c $(CFLAGS) $(MACRO) $(ALLINCLUDES) $< -o $@
+	$(CC) -c $(CFLAGS) $(MACRO) $(INCLUDESSLFLAGS) $(ALLINCLUDES) $< -o $@
 
 #auto-generated file is to be generated before code compilation can begin.
 pre-built :
@@ -45,7 +50,7 @@ pre-built :
 deps : $(UTILOBJS)  $(IOOBJS) $(APPOBJS) $(SERVEROBJS)
 
 cserver : pre-built deps
-	$(CC) $(CFLAGS) $(ALLINCLUDES) $(MACRO) $(UTILOBJS) $(IOOBJS) $(APPOBJS) $(SERVEROBJS) cserver.c -o cserver
+	$(CC) $(CFLAGS) $(INCLUDESSLFLAGS) $(LDSSLFLAGS) $(ALLINCLUDES) $(MACRO) $(UTILOBJS) $(IOOBJS) $(APPOBJS) $(SERVEROBJS) -lssl -lcrypto  cserver.c -o cserver
 
 clean :
 	rm -f $(OBJDIR)/*

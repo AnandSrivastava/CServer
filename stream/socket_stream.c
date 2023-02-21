@@ -23,6 +23,9 @@ int socket_write(stream_handle handle,  char *buf, int len) {
 
 void socket_destroy(struct stream *st) {
 	if(st != NULL) {
+		int socket_id = *((int*)st->handle);
+		shutdown(socket_id, SHUT_WR);
+
 		free_safe(st->handle);
 		free_safe(st);
 	}
