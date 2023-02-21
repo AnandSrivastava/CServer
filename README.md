@@ -14,11 +14,9 @@ Started as a weekend project I am continuing this to see how far it goes.
  3. OpenSSL installation 
 
 **(OpenSSL)**
-MAC user can install OpenSSL using brew
-    brew install openssl
-Linux installation 
-    sudo apt-get install libssl-dev
-For windows or other alternate OS'es check https://www.openssl.org/source/
+* MAC user can install OpenSSL using brew - brew install openssl
+* Linux installation - sudo apt-get install libssl-dev
+* For windows or other alternate OS'es check - https://www.openssl.org/source/
 
 After OpenSSL installation please set OPENSSL_LIB and OPENSSL_INCLUDE environment variable.
 eg :- export OPENSSL_LIB /path/to/openssl/lib/installation
